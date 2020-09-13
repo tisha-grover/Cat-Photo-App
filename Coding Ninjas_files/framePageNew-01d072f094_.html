@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)https://cdn.pagesense.io/stage-script/framePageNew-01d072f094_.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title></title>
+</head>
+
+<body data-gr-c-s-loaded="true">
+<script type="text/javascript">
+
+var receiver = function(message) {
+
+     
+    var data = message.data;
+    if (!(typeof data == 'object')) {
+        return;
+    }
+
+    var COMMUNICATIONTYPE = {
+        SET: 1,
+        GET: 2,
+        SEND: 3,
+        REVENUESET:4,
+        REVENUEGET:5,
+        GETONLY: 6,
+        SETONLY: 7,
+        SESSSIONSET : 9,
+        SETDATAINLOCALSTORAGE : 10,
+        DELETESESSIONCOOKIES : 11,
+        ISTPCOOKIEENABLED: 12
+    }
+
+    function getCookie(cks) {
+
+        var urlck = "zab_" + cks.key;
+
+        if (!cookieHandler.checkCookieExists(urlck)) {
+            return;
+        }
+
+        var urlcookie = JSON.parse(cookieHandler.getCookieValue(urlck));
+
+        var data = {};
+        data.type = COMMUNICATIONTYPE.GET;
+        data.value = urlcookie ? urlcookie : null;
+        data.callback = cks.callback;
+
+        cookieHandler.deleteCookie(urlck);
+        parent.postMessage(data, "*");
+    }
+    
+    function getOnlyCookie(cks) {
+
+        var urlck = "zab_" + cks.key;
+
+        var urlcookie =  document.cookie.match(urlck + "\=([^;]*)");
+
+        var data = {};
+        data.type = COMMUNICATIONTYPE.GET;
+        data.value = (urlcookie && urlcookie[1]) ? urlcookie[1] : null;
+        data.callback = cks.callback;
+        parent.postMessage(data, "*");
+    }
+    
+    function setOnlyCookie(data) {
+
+        if (!(typeof data == 'object')) {
+            return;
+        }
+
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+
+
+                var useragent  = navigator.userAgent;
+                if(sameSiteHandler.shouldEnableSameSiteNone(useragent)) {
+                    document.cookie = "zab_"+ key + "=" +  data[key] + ";samesite=none;secure";
+                }else{
+                    document.cookie = "zab_"+ key + "=" +  data[key] + ";";
+                }
+                
+            }
+        }
+        parent.postMessage("", "*");
+    }
+
+    function setCookie(data) {
+
+        if (!(typeof data == 'object')) {
+            return;
+        }
+
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                cookieHandler.setCookie("zab_" + key, data[key], 1);
+            }
+        }
+        parent.postMessage("", "*");
+    }
+    function setRevenueCookie(data) {
+
+        if (!(typeof data == 'object')) {
+            return;
+        }
+
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                var revchk = "zab_" + key;
+                if (cookieHandler.checkCookieExists(revchk)) {
+                    return ;
+                }else{
+                    cookieHandler.setCookie("zab_" + key, data[key], 1);
+                }
+                
+            }
+        }
+        parent.postMessage("", "*");
+    }
+    function getRevenueCookie(cks) {
+
+        var urlck = "zab_" + cks.key;
+
+        if (!cookieHandler.checkCookieExists(urlck)) {
+            return;
+        }
+
+        var urlcookie = JSON.parse(cookieHandler.getCookieValue(urlck));
+
+        var data = {};
+        data.type = COMMUNICATIONTYPE.REVENUEGET;
+        data.value = urlcookie ? urlcookie : null;
+        data.callback = cks.callback;
+        data.revenue = cks.revenue;
+        cookieHandler.deleteCookie(urlck);
+        parent.postMessage(data, "*");
+    }
+   
+    function setSessionCookies(data) {
+    
+        var obj = {};
+        obj.expDetails = {}; 
+        if(cookieHandler.exists(data.exp) && cookieHandler.exists(data.callback)) {
+
+            for (var expId in data.exp) {
+                if (cookieHandler.checkCookieExists("zsr" + expId)) { //No I18N
+                    var sessionCookie = cookieHandler.getCookieValue("zsr" + expId); //No I18N
+                    var timePageNoCookie = cookieHandler.getCookieValue(sessionCookie);
+                    var splitArray = timePageNoCookie.split('-')
+                    var time = splitArray[0];
+                    var pageNo = splitArray[1];
+                    obj.expDetails[expId] = {};
+                    obj.expDetails[expId].cookie = sessionCookie;
+                    obj.expDetails.firstTimeStamp = time; 
+                    obj.expDetails.pageNo = ++pageNo;
+                    obj.expDetails.lastInteractedTime = Number(splitArray[2]);
+                    if(new Date().getTime() - Number(splitArray[2]) >  30 * 60 *1000) {
+                        obj.expDetails.lastInteractedTime = "timeout";
+                        deleteSessionCookies(data);
+                    } else {
+                        var timePageNo = time + "-" + pageNo + "-" + new Date().getTime();
+                        cookieHandler.addCookie(sessionCookie, timePageNo, Number(time));
+                    }
+                } else {
+                    var uniqueId = cookieHandler.generateUniqueId("zsrv"); //No I18N
+                    var firstTimeStamp = new Date().getTime();
+                    var timePageNo = firstTimeStamp + "-" + 1 + "-" + firstTimeStamp;
+                    cookieHandler.addCookie("zsr" + expId, uniqueId, firstTimeStamp); //No I18N
+                    cookieHandler.addCookie(uniqueId, timePageNo, firstTimeStamp);
+                    obj.expDetails[expId] = {};
+                    obj.expDetails[expId].cookie = uniqueId;
+                    obj.expDetails.firstTimeStamp = firstTimeStamp; 
+                    obj.expDetails.pageNo = 1;
+                    obj.expDetails.lastInteractedTime = firstTimeStamp;
+                }
+                checkDataExistsInLocalStorage(expId, data.url);
+            }
+        }
+
+        obj.type =  COMMUNICATIONTYPE.SESSSIONSET;
+        obj.callback = data.callback;
+        parent.postMessage(obj, "*");
+    }
+
+    
+
+    function sendData(data) {
+
+        if (!(typeof data == 'object')) {
+            return;
+        }
+
+        sendDataToServer(data.url, data.value);
+        parent.postMessage("", "*");
+    }
+
+    function setDataInLocalStorage(data) {
+
+        try {
+            var storage = window['localStorage'];
+            storage.setItem(data.data.key, JSON.stringify(data.data.data));
+        }
+        catch(e) {
+        }
+
+        
+    }
+
+    function checkDataExistsInLocalStorage(expId, url) {
+        if (typeof(Storage) !== "undefined") {
+            if(cookieHandler.exists(localStorage.getItem(expId))) {
+                sendDataToServer(url, JSON.parse(localStorage.getItem(expId)));
+            }
+        }      
+    }
+
+    function deleteSessionCookies(data) {
+
+        var expObj = data.exp;
+        for (var expId in expObj) {
+            if(expObj.hasOwnProperty(expId)) {
+                var sessionCookie = cookieHandler.getCookieValue("zsr" + expId); //No I18N
+                cookieHandler.deleteCookie("zsr" + expId);
+                cookieHandler.deleteCookie(sessionCookie);
+            }
+        }
+    }
+    
+    function isThirdPartyEnabled(cks) {
+        var key = "ztpctest";
+        cookieHandler.setCookie(key, "tpcvalue");
+        var value = cookieHandler.getCookieValue(key);
+        
+        var data = {};
+        data.type = COMMUNICATIONTYPE.ISTPCOOKIEENABLED;
+        data.value = cookieHandler.exists(value);
+        data.callback = cks.callback;
+
+        cookieHandler.deleteCookie(key);
+        parent.postMessage(data, "*");
+        cookieHandler.deleteCookie(key);
+    }
+
+
+    switch (data.type) {
+        case 1:
+            setCookie(data.cks);
+            break;
+        case 2:
+            getCookie(data.cks);
+            break;
+        case 3:
+            sendData(data._data);
+            break;
+        case 4:
+            setRevenueCookie(data.cks);
+            break;
+        case 5:
+            getRevenueCookie(data.cks);
+            break;
+        case COMMUNICATIONTYPE.GETONLY:
+            getOnlyCookie(data.cks);
+            break;
+        case COMMUNICATIONTYPE.SETONLY:
+            setOnlyCookie(data.cks);
+            break;
+        case COMMUNICATIONTYPE.SESSSIONSET:
+            setSessionCookies(data);  
+            break;
+        case COMMUNICATIONTYPE.SETDATAINLOCALSTORAGE:
+            setDataInLocalStorage(data);
+            break;   
+        case COMMUNICATIONTYPE.DELETESESSIONCOOKIES:
+            deleteSessionCookies(data.data);   
+            break;
+        case COMMUNICATIONTYPE.ISTPCOOKIEENABLED:
+            isThirdPartyEnabled(data.cks);
+            break;
+            default:
+
+            break;
+    }
+
+}
+
+var sendDataToServer = function(url, data) {
+
+    function createCORSRequest(method, url) {
+
+        var xhr = new XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+            xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+        } else {
+            xhr = null;
+        }
+        return xhr;
+    }
+
+    function makeCorsRequest(url, data) {
+
+        var xhr = createCORSRequest('POST', url); //NO I18N
+        try {
+            if (xhr) {
+                
+                xhr.setRequestHeader('Content-Type', 'text/plain');
+                xhr.send(data);
+                return;
+            }
+        } catch (e) {}
+    }
+
+    if (!url || !data) {
+        return;
+    }
+    
+    if(!checkSessionCookie(data.srrd)) {
+        return;
+    }
+
+    updateLastInteractedTime(data);
+    
+    makeCorsRequest(url,JSON.stringify(data));
+    
+    if (typeof(Storage) !== "undefined") {
+       localStorage.removeItem(data.srrd[0].b); 
+    }
+};
+
+function updateLastInteractedTime(data) {
+
+    for(var i in data.srrd){
+         if(cookieHandler.checkCookieExists("zsr"+ data.srrd[i].b)){
+            if(data.spf && data.spf.lit) {
+                var sessionCookie = cookieHandler.getCookieValue("zsr" + data.srrd[i].b); //No I18N
+                if(cookieHandler.checkCookieExists(sessionCookie)) {
+                    var timePageNoCookie = cookieHandler.getCookieValue(sessionCookie);
+                    var splitArray = timePageNoCookie.split('-')
+                    var time = splitArray[0];
+                    var pageNo = splitArray[1];
+                    var timePageNo = time + "-" + pageNo + "-" + new Date().getTime();
+                    cookieHandler.addCookie(sessionCookie, timePageNo, Number(time));
+                }
+            }
+         }
+    }
+
+}
+
+function checkSessionCookie(srrd) {
+
+    for(var i in srrd){
+         if(cookieHandler.checkCookieExists("zsr"+ srrd[i].b)){
+           return true;
+         }
+    }
+
+    return false;
+}
+
+
+var cookieHandler = {
+
+    setCookie: function(cname, cvalue, exp) {
+
+        var expires = "";
+        if (exp) {
+
+            var date = new Date();
+            date.setTime(date.getTime() + (exp * 24 * 60 * 60 * 1000));
+            expires = ";expires=" + date.toUTCString(); //No I18N
+        }
+        var useragent  = navigator.userAgent;
+        if(sameSiteHandler.shouldEnableSameSiteNone(useragent)) {
+            document.cookie = encodeURIComponent(cname) + "=" + encodeURIComponent(cvalue) + expires + ";path=/;samesite=none;secure";
+        }else{
+            document.cookie = encodeURIComponent(cname) + "=" + encodeURIComponent(cvalue) + expires + ";path=/";
+        }
+       
+
+    },
+    
+    addCookie: function(cname, cvalue, exp) {
+
+        var expires = "";
+        if (exp) {
+            var date =new Date(exp);
+            date.setTime( exp + ( 2 * 60 * 60 * 1000));
+            expires = ";expires=" + date.toUTCString(); //No I18N
+        }
+
+        var useragent  = navigator.userAgent;
+        if(sameSiteHandler.shouldEnableSameSiteNone(useragent)) {
+            document.cookie = encodeURIComponent(cname) + "=" + encodeURIComponent(cvalue) + expires + ";path=/;samesite=none;secure";
+         }else{
+            document.cookie = encodeURIComponent(cname) + "=" + encodeURIComponent(cvalue) + expires + ";path=/";
+        }
+
+    },
+    deleteCookie: function(name) {
+        document.cookie = encodeURIComponent(name) + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    },
+    getCookieValue: function(cname) {
+
+        var name = encodeURIComponent(cname) + "=";
+        var cookies = document.cookie;
+        var carray = cookies.split(';');
+
+        for (var i = 0; i < carray.length; i++) {
+
+            var cookie = carray[i];
+            while (cookie.charAt(0) == ' ') {
+                cookie = cookie.substring(1);
+            }
+            if (cookie.indexOf(name) == 0) {
+                return decodeURIComponent(cookie.substring(name.length, cookie.length));
+            }
+        }
+        return "";
+    },
+    checkCookieExists: function(cname) {
+
+        var cvalue = cookieHandler.getCookieValue(cname);
+        if (cvalue == "") {
+            return false;
+        }
+        return true;
+    },
+ 
+    exists: function(value) {
+
+            if (value === undefined || value === null || value === "") {
+                return false;
+            }
+            if (typeof value == 'object' && Object.keys(value).length == 0) {
+                return false;
+            }
+            return true;
+    },
+    generateUniqueId: function(a) {
+            var date = new Date();
+            var time = date.getTime();
+            return time + a + Math.random();
+    }
+
+};
+
+
+var sameSiteHandler = {
+
+    shouldEnableSameSiteNone: function(useragent) {
+
+        return !sameSiteHandler.isSameSiteNoneIncompatible(useragent);
+    },
+
+    isSameSiteNoneIncompatible :  function (useragent) {
+        return sameSiteHandler.hasWebKitBug(useragent) ||
+           sameSiteHandler.dropssameSiteCookies(useragent);
+    },
+    
+
+    hasWebKitBug: function (useragent) {
+        return sameSiteHandler.checkIosVersion(12, useragent) ||
+            (sameSiteHandler.checkMacosxVersion(10, 14, useragent) &&
+            (sameSiteHandler.checkSafari(useragent) || sameSiteHandler.checkMacEmbeddedBrowser(useragent)));
+    },
+   
+
+    dropssameSiteCookies: function(useragent) {
+        if (sameSiteHandler.checkUcBrowser(useragent)) {
+            return !sameSiteHandler.checkUcBrowserVersionAtLeast(12, 13, 2, useragent)
+        }
+        
+        return sameSiteHandler.checkChromiumBased(useragent , 51, 66);
+    },
+    
+
+
+    checkIosVersion: function (major, useragent) {
+        var regex = /\(iP.+; CPU .*OS (\d+)[_\d]*.*\) AppleWebKit\//;
+        var regexmatch = regex.exec(useragent);
+       
+        try{
+             return regexmatch[1] == major;
+
+        }catch(e) {
+            return false;
+        }    
+
+    },
+  
+    checkMacosxVersion: function(major, minor, useragent) {
+        var regex = /\(Macintosh;.*Mac OS X (\d+)_(\d+)[_\d]*.*\) AppleWebKit\//;
+        var regexmatch = regex.exec(useragent);
+    
+        try{
+             return (regexmatch[1] == major) &&
+                (regexmatch[2] == minor);
+        }catch(e) {
+            return false;
+        }
+       
+       
+
+    },
+
+    checkSafari: function(useragent) {
+        var safari_regex = "Version\/.* Safari\/";
+        return useragent.match(safari_regex) &&
+           !sameSiteHandler.checkChromiumBased(useragent,51,66);
+
+    },
+   
+    checkMacEmbeddedBrowser: function(useragent) {
+        var regex = "^Mozilla\/[\.\d]+ \(Macintosh;.*Mac OS X [_\d]+\) "
+                     + "AppleWebKit\/[\.\d]+ \(KHTML, like Gecko\)$";
+        return useragent.match(regex);
+    },
+  
+
+    checkChromiumBased: function (useragent , fromversion, toversion ) {
+        var regex = "Chrom(e|ium)";
+        if(useragent.match(regex)) {
+            regex = /Chrom[^ \/]+\/(\d+)[\.\d]* /;
+  
+            
+            var regexmatch = regex.exec(useragent);
+            
+            try{
+                var version = regexmatch[1];
+                return (version >= fromversion &&  version <= toversion);
+            }catch(e) {
+                return false;
+            }   
+            
+        }
+    },  
+  
+
+  
+
+    checkUcBrowser : function(useragent) {
+        var regex = "UCBrowser\/";
+        return useragent.match(regex);
+    },
+    
+
+    checkUcBrowserVersionAtLeast: function ( major,  minor,  build,  useragent) {
+        var regex = /UCBrowser\/(\d+)\.(\d+)\.(\d+)[\.\d]* /;
+        var regexmatch = regex.exec(useragent);
+        
+        try{
+             var major_version = regexmatch[1];
+            var minor_version = regexmatch[2];
+            var build_version = regexmatch[3];
+            if(major_version != major) {
+                return major_version > major;
+            }
+        
+            if(minor_version != minor) {
+                return minor_version > minor;
+            }
+        
+            return build_version >= build;
+        }catch(e) {
+            return false;
+        }
+       
+    }
+   
+
+};
+
+
+if (window.addEventListener) {
+    window.addEventListener('message', receiver, false); // NO I18N
+} else { // NO I18N
+    window.attachEvent('onmessage', receiver); // NO I18N
+}
+</script>
+
+
+</body></html>

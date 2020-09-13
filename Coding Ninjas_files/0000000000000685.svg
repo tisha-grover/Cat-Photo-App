@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="425px" height="126px" viewBox="0 0 425 126" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F71C7A" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="425" height="122"></rect>
+        <linearGradient x1="61.7286611%" y1="123.384575%" x2="4.5646398%" y2="-17.3462966%" id="linearGradient-4">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F71C7A" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-5" x="0" y="0" width="425" height="71"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-42">
+            <g id="Background-Abstract-Copy-3">
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="Mask" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                <path d="M347.818396,-37 C311.733491,19.6666667 311.733491,70 347.818396,114 C383.903302,158 363.187893,201.333333 285.67217,244 L432.016509,237 L432.016509,-29 L347.818396,-37 Z" id="Path-8" fill="url(#linearGradient-1)" mask="url(#mask-3)"></path>
+                <ellipse id="Oval-14" fill="url(#linearGradient-1)" mask="url(#mask-3)" cx="410.966981" cy="67" rx="47.1108491" ry="47"></ellipse>
+                <ellipse id="Oval-14-Copy" fill="url(#linearGradient-1)" mask="url(#mask-3)" cx="231.043632" cy="91.5" rx="68.6615566" ry="68.5"></ellipse>
+                <path d="M233.549528,-28 C135.986635,10 106.584119,62 145.341981,128 C184.099843,194 168.730346,243.666667 99.2334906,277 L-77.1816038,244 L-12.0283019,-51 L233.549528,-28 Z" id="Path-7" fill="url(#linearGradient-1)" mask="url(#mask-3)"></path>
+                <path d="M418.985849,-70 C182.429245,-38 73.1721698,18 91.2146226,98 C109.257075,178 86.8710692,228.333333 24.0566038,249 L-107.252358,204 L-42.0990566,-91 L418.985849,-70 Z" id="Path-7" fill="url(#linearGradient-4)" mask="url(#mask-3)"></path>
+            </g>
+            <g id="Waves-Overlay-Copy-3" transform="translate(0.000000, 55.000000)">
+                <g id="Path-11-+-Path-12-+-Path-10-Mask">
+                    <mask id="mask-6" fill="white">
+                        <use xlink:href="#path-5"></use>
+                    </mask>
+                    <g id="Mask"></g>
+                    <path d="M-56,88.8979179 C176,8.96597264 341.368389,-6.74170137 440.105168,41.7748959 C538.841947,90.2914932 564.180651,119.033195 516.121282,128 L-56,128 L-56,88.8979179 Z" id="Path-11" fill="#FFFFFF" opacity="0.5" mask="url(#mask-6)"></path>
+                    <path d="M-54.9936567,-1 C188.436148,3.6545486 350.83384,35.9039211 432.199418,95.7481174 C513.564997,155.592314 422.528919,177.202718 159.091185,160.57933 L-71,152.600104 L-54.9936567,-1 Z" id="Path-12" fill="#FFFFFF" opacity="0.5" mask="url(#mask-6)"></path>
+                    <path d="M-83,-7 C52.321652,59.6666667 192.016847,77.3333333 336.085584,46 C480.154322,14.6666667 499.602928,47.6666667 394.431405,145 L-38.7799384,145 L-83,-7 Z" id="Path-10" fill="#FFFFFF" mask="url(#mask-6)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

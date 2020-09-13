@@ -1,0 +1,47 @@
+#grad {
+   background-image: linear-gradient(red, yellow);
+ }
+ .display{
+  
+  }
+.description {
+   font-family: cursive;
+   padding-left: 10px;
+   padding-right: 10px;
+   margin-top: -15px;
+   text-align: justify;
+   /* border: 5px solid red; */
+   }
+.photograph{
+  
+}
+.container{
+   
+   display:flex;
+   justify-content: center;
+}
+aside{
+   display:inline-block;
+   width:18%;
+   border: 1px solid grey;
+   padding: 25px;
+}
+main{
+   /* width:70%; */
+   display:inline-block;
+   
+}
+#container{
+   color: navy;
+   padding-left: 50px;
+}
+#description{
+   background-color: lightgrey;
+}
+#photograph{
+   padding-left:500px;
+}
+.padding{
+   padding-left:540px;
+   margin-left: 5px;
+}

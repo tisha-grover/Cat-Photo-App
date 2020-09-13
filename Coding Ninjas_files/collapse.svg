@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="61px" viewBox="0 0 18 61" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>Collapse</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="97.1344183%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#EB6997" offset="0%"></stop>
+            <stop stop-color="#F9CF5D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="New-Designs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-432.000000, -295.000000)" fill-rule="nonzero">
+            <g id="Collapse" transform="translate(432.000000, 295.000000)">
+                <path d="M2.00728323e-13,-1.27897692e-13 L15.9686311,10.0262588 C17.1341616,10.758063 17.8416431,12.0376455 17.8416431,13.4138718 L17.8416431,47.0135875 C17.8416431,48.3773102 17.1468673,49.6470705 15.9983501,50.3823581 L2.00728323e-13,60.624597 L2.00728323e-13,-1.27897692e-13 Z" id="Rectangle" fill="url(#linearGradient-1)" transform="translate(8.920822, 30.312299) scale(-1, 1) translate(-8.920822, -30.312299) "></path>
+                <polygon id="Triangle" fill="#FFFFFF" transform="translate(9.000000, 30.000000) scale(-1, 1) rotate(90.000000) translate(-9.000000, -30.000000) " points="9 25 16 35 2 35"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

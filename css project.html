@@ -1,0 +1,136 @@
+<!Doctype html>
+
+<html>
+		<head>
+				<title> CSS PROJECT</title>
+				<meta charset="UTF-8">
+				<meta name="viewpoint" content="width=device-width, initial-scale=1">
+			
+	<style>
+	
+	    body {
+		    margin:0;
+			padding:0;
+			line-height: 1.5em;
+			}
+			
+		#header {
+		    background: black;
+			font-family: arial;
+			height: 100px;
+			    } 
+				
+		#contentwrapper {
+            float: left;
+            width: 100%;
+					}
+					
+		#contentcolumn {
+		     margin: 0 230px 0 230px;
+			 }
+			 
+		#leftcolumn {
+			float: left;
+			width: 230px;
+			margin-left: -100px;
+			background: #24C8FF;
+			}
+			
+		#footer {
+			clear: left; /cannot float on left /*
+			width: 100%
+			background: black;
+			color: #FFF;
+			font-family: arial;
+			text-align: center;
+			padding: 4px;
+				}
+				
+			/* ##### navigation bar ##### */
+
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			background-color: #000;
+			}
+				
+		li {
+			float: left;
+			border-right: 1px solid #bbb;
+			}
+			
+		li: last-child {
+			border-right: none;
+			           }
+					   
+		li a {
+			display: block;
+			color: white;
+			text-align: center;
+			padding:14px 16px;
+			text-decoration: none;
+			}
+			
+		li a:hover:not(.active) {
+			background-color: #808080;
+			}
+		.active {
+			background-color: #0099ff;
+			    }
+        /* ##### responsive layout css ##### */
+    
+        @media (max-width: 840px) { /* drop right column down */
+		 
+		 #leftcolumn {
+		    margin-left: 100%;
+			}
+			
+		#rightcolumn {	
+			
+			float: none;
+			width: 100%;
+			margin-left: -0px;		
+			clear: both;
+			}
+			
+		#contentcolumn {
+			margin-right: 0; /* set margin to left column down */
+		    }
+		
+		 @media (max-width: 840px) { /* drop right column down */
+		 
+		 #leftcolumn {
+		    float: none;
+			width: 100%;
+		    margin-left: 0;
+			clear: both;
+			}
+
+		#contentcolumn {
+			margin-left: 0; 
+			     }
+		}		 
+	</style>		
+	
+		</head>	
+		<body>
+		
+		<div id="container">
+		
+		<div id="header">
+		
+		    <ul style="display: inline;">
+			   <li><a class=" active" href="#home">HOME</a></li>
+			   <li><a href="#news">ABOUT</a></li>
+			   <li><a href="#news">NEWS</a></li>
+			   <li><a href="#news">CONTACT</a></li>
+			</ul>
+		</div>
+		<div id="contentwrapper">
+		    <div id="contentcolumn">
+			<div class="innertext">
+
+		</div>	
+		</body>
+</html>

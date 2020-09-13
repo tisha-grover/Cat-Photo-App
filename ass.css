@@ -1,0 +1,47 @@
+.div{
+    border:10px solid grey;
+    border-width: 5px;
+    width: 900px;
+    margin: auto;
+   /* margin-left: 20%; */
+}
+.div2{
+    border:10px solid grey;
+    border-width: 5px;
+    width: 900px;
+   /* margin-left: 20%;    */
+   margin: auto;
+   height: 180px;
+   display: flex;
+  justify-content: space-between;
+}
+
+.div3{
+    border:10px solid gold;
+    border-width: 5px;
+    width: 200px;
+  
+   height: 160px;
+}
+.div4{
+    border:10px solid darkgreen;
+    border-width: 5px;
+    width: 220px;
+      height: 130px;
+}
+.h1
+{
+    margin: 0%;
+    background-color: navy;
+ padding: 5px;
+   text-align: center;
+    color: white;
+}
+a:link , a:visited{
+
+     text-decoration: none;
+     color: purple;
+}
+a:hover{
+    color: darkseagreen;
+}
